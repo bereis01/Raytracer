@@ -8,8 +8,8 @@ int main() {
   camera c;
   c.aspect_ratio = 16.0f / 9.0f;
   c.img_width = 1200;
-  c.samples_per_pixel = 100;
-  c.max_recursion_depth = 10;
+  c.samples_per_pixel = 10;
+  c.max_recursion_depth = 5;
   c.fov = 20;
   c.eye = point3(13.0f, 2.0f, 3.0f);
   c.lookat = point3(0.0f, 0.0f, 0.0f);
