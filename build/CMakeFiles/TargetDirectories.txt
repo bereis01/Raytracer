@@ -1,3 +1,0 @@
-/home/bereis01/Personal/UFMG/Projects/CG/Raytracer/build/CMakeFiles/rt_on.dir
-/home/bereis01/Personal/UFMG/Projects/CG/Raytracer/build/CMakeFiles/edit_cache.dir
-/home/bereis01/Personal/UFMG/Projects/CG/Raytracer/build/CMakeFiles/rebuild_cache.dir
