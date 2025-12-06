@@ -5,7 +5,7 @@
 
 class camera {
 public:
-  void render(const world &w);
+  void render(const world &w, std::ofstream &output_file);
 
   // Image parameters
   double aspect_ratio = 4.0f / 3.0f;

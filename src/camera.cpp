@@ -3,13 +3,13 @@
 #include "vec3.hpp"
 
 // Renders and outputs the image
-void camera::render(const world &w) {
+void camera::render(const world &w, std::ofstream &output_file) {
   this->initialize();
 
   // PPM header
-  std::cout << "P3" << std::endl
-            << this->img_width << " " << this->img_height << std::endl
-            << "255" << std::endl;
+  output_file << "P3" << std::endl
+              << this->img_width << " " << this->img_height << std::endl
+              << "255" << std::endl;
 
   // Printing the RGB values of each pixel
   for (int i = 0; i < this->img_height; i++) {
@@ -30,7 +30,7 @@ void camera::render(const world &w) {
       }
 
       // Writes the pixel to the image
-      write_color(std::cout, pixel_color);
+      write_color(output_file, pixel_color);
     }
 
     // Logging

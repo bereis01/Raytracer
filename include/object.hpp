@@ -33,7 +33,6 @@ public:
 class sphere : public object {
 public:
   sphere(const point3 &center, double radius, material *mat);
-  ~sphere();
 
   bool check_hit(const ray &r, interval ray_t,
                  hit_record &record) const override;

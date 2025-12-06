@@ -6,11 +6,6 @@ sphere::sphere(const point3 &center, double radius, material *mat)
   this->mat = mat;
 }
 
-sphere::~sphere() {
-  // Cleans up allocated memory
-  delete this->mat;
-}
-
 bool sphere::check_hit(const ray &r, interval ray_t, hit_record &record) const {
   // Vector from the ray's origin to the sphere's center
   vec3 eye_to_sphere = this->center - r.get_origin();

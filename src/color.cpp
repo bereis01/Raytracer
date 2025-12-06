@@ -8,7 +8,7 @@ inline double linear_to_gamma(double linear_component) {
   return 0;
 }
 
-void write_color(std::ostream &out, const color &pixel_color) {
+void write_color(std::ofstream &out, const color &pixel_color) {
   double r = pixel_color.x();
   double g = pixel_color.y();
   double b = pixel_color.z();
