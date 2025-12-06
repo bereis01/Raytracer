@@ -1,0 +1,1 @@
+/usr/bin/c++ CMakeFiles/rt_on.dir/src/camera.cpp.o CMakeFiles/rt_on.dir/src/color.cpp.o CMakeFiles/rt_on.dir/src/interval.cpp.o CMakeFiles/rt_on.dir/src/main.cpp.o CMakeFiles/rt_on.dir/src/material.cpp.o CMakeFiles/rt_on.dir/src/object.cpp.o CMakeFiles/rt_on.dir/src/world.cpp.o -o rt_on 
