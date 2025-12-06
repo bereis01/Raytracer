@@ -169,6 +169,6 @@ inline vec3 random_in_unit_disk() {
 inline point3 sample_disk(vec3 center, vec3 horizontal_radius,
                           vec3 vertical_radius) {
   // Returns a random point in the camera defocus disk
-  auto p = random_in_unit_disk();
+  vec3 p = random_in_unit_disk();
   return center + (p[0] * horizontal_radius) + (p[1] * vertical_radius);
 }

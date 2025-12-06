@@ -45,6 +45,7 @@ void camera::render(const world &w) {
 void camera::initialize() {
   // Image parameters
   this->img_height = int(img_width / aspect_ratio);
+  this->img_height = (this->img_height < 1) ? 1 : this->img_height;
 
   // Rendering parameters
   this->pixel_sample_color_scale = 1.0 / samples_per_pixel;
@@ -67,14 +68,15 @@ void camera::initialize() {
   this->pixel_u = vp_u / img_width;
   this->pixel_v = vp_v / img_height;
 
-  point3 vp_pos_upper_left =
-      this->eye - (this->focus_distance * this->w) - vp_u / 2.0f - vp_v / 2.0f;
+  point3 vp_pos_upper_left = this->eye - (this->focus_distance * this->w) -
+                             (vp_u / 2.0f) - (vp_v / 2.0f);
   this->pixel_pos_upper_left = vp_pos_upper_left + 0.5f * (pixel_u + pixel_v);
 
-  double defocus_radius = this->focus_distance *
-                          std::tan(degrees_to_radians(this->defocus_angle / 2));
-  defocus_disk_hor_radius = this->u * defocus_radius;
-  defocus_disk_ver_radius = this->v * defocus_radius;
+  double defocus_radius =
+      this->focus_distance *
+      std::tan(degrees_to_radians(this->defocus_angle / 2.0f));
+  this->defocus_disk_hor_radius = this->u * defocus_radius;
+  this->defocus_disk_ver_radius = this->v * defocus_radius;
 }
 
 ray camera::get_ray_sample(int i, int j) const {
@@ -86,12 +88,12 @@ ray camera::get_ray_sample(int i, int j) const {
 
   // Constructs the ray from the camera to the pixel sample position
   point3 ray_origin =
-      (this->defocus_angle <= 0)
+      ((this->defocus_angle) <= 0.0f)
           ? this->eye
           : sample_disk(this->eye, this->defocus_disk_hor_radius,
                         this->defocus_disk_ver_radius);
   vec3 ray_direction = pixel_sample - ray_origin;
-  return ray(this->eye, ray_direction);
+  return ray(ray_origin, ray_direction);
 }
 
 color camera::ray_color(const ray &r, int depth, const world &w) const {
