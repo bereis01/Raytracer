@@ -9,8 +9,9 @@ world::~world() {
   }
 }
 
-void world::add_sphere(point3 center, double radius, material *mat) {
-  sphere *ball = new sphere(center, radius, mat);
+void world::add_sphere(point3 center, double radius, material *diffuse,
+                       material *reflective, material *refractive) {
+  sphere *ball = new sphere(center, radius, diffuse, reflective, refractive);
   objects.emplace_back(ball);
 }
 

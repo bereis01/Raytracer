@@ -10,7 +10,9 @@ class hit_record {
 public:
   point3 point;
   vec3 normal;
-  material *mat;
+  material *diffuse;
+  material *reflective;
+  material *refractive;
   double t;
   bool is_ray_outside;
 
@@ -32,7 +34,9 @@ public:
 
 class sphere : public object {
 public:
-  sphere(const point3 &center, double radius, material *mat);
+  sphere(const point3 &center, double radius, material *diffuse,
+         material *reflective, material *refractive);
+  ~sphere();
 
   bool check_hit(const ray &r, interval ray_t,
                  hit_record &record) const override;
@@ -43,5 +47,7 @@ private:
   double radius;
 
   // Color properties
-  material *mat;
+  material *diffuse;
+  material *reflective;
+  material *refractive;
 };

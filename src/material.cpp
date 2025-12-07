@@ -1,7 +1,8 @@
 #include "material.hpp"
 
 bool diffuse::scatter(const ray &incident, const hit_record &record,
-                      color &attenuation, ray &scattered) const {
+                      color &attenuation, ray &scattered,
+                      double &coefficient) const {
   // Generates the direction to which the ray is reflected
   // In the case of diffuse material, "random" following the normal
   vec3 scatter_direction = record.normal + random_unit_vector();
@@ -12,11 +13,13 @@ bool diffuse::scatter(const ray &incident, const hit_record &record,
 
   scattered = ray(record.point, scatter_direction);
   attenuation = this->coloration;
+  coefficient = this->coefficient;
   return true;
 }
 
 bool reflective::scatter(const ray &incident, const hit_record &record,
-                         color &attenuation, ray &scattered) const {
+                         color &attenuation, ray &scattered,
+                         double &coefficient) const {
   // Generates the direction to which the ray is reflected
   // In the case of reflective material, symmetric according to normal
   vec3 scatter_direction = reflect(incident.get_direction(), record.normal);
@@ -31,11 +34,13 @@ bool reflective::scatter(const ray &incident, const hit_record &record,
 
   scattered = ray(record.point, scatter_direction);
   attenuation = this->coloration;
+  coefficient = this->coefficient;
   return (dot(scattered.get_direction(), record.normal) > 0);
 }
 
 bool refractive::scatter(const ray &incident, const hit_record &record,
-                         color &attenuation, ray &scattered) const {
+                         color &attenuation, ray &scattered,
+                         double &coefficient) const {
   // Adjusts the refraction index according to if the ray is entering or exiting
   // the material
   double refraction_index = record.is_ray_outside
@@ -61,5 +66,6 @@ bool refractive::scatter(const ray &incident, const hit_record &record,
 
   scattered = ray(record.point, scatter_direction);
   attenuation = color(1.0, 1.0, 1.0);
+  coefficient = this->coefficient;
   return true;
 }

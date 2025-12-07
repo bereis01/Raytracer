@@ -34,12 +34,12 @@ void camera::render(const world &w, std::ofstream &output_file) {
     }
 
     // Logging
-    std::clog << "\rScanlines remaining: " << (this->img_height - i) << ' '
+    std::cout << "\rScanlines remaining: " << (this->img_height - i) << ' '
               << std::flush;
   }
 
   // Logging
-  std::clog << "\rDone.                 " << std::endl; // Logging
+  std::cout << "\rDone.                 " << std::endl; // Logging
 }
 
 void camera::initialize() {
@@ -111,11 +111,35 @@ color camera::ray_color(const ray &r, int depth, const world &w) const {
   if (hit_anything) {
     ray scattered;
     color attenuation;
-    bool ray_was_scattered_by_object =
-        record.mat->scatter(r, record, attenuation, scattered);
+    double coefficient;
+    bool ray_was_scattered_by_object;
+    color final_color = color(0.0f, 0.0f, 0.0f);
+
+    // Diffuse ray
+    ray_was_scattered_by_object =
+        record.diffuse->scatter(r, record, attenuation, scattered, coefficient);
     if (ray_was_scattered_by_object)
-      return attenuation * ray_color(scattered, depth - 1, w);
-    return color(0, 0, 0);
+      if (coefficient > 0.0f)
+        final_color +=
+            coefficient * attenuation * ray_color(scattered, depth - 1, w);
+
+    // Reflective ray
+    ray_was_scattered_by_object = record.reflective->scatter(
+        r, record, attenuation, scattered, coefficient);
+    if (ray_was_scattered_by_object)
+      if (coefficient > 0.0f)
+        final_color +=
+            coefficient * attenuation * ray_color(scattered, depth - 1, w);
+
+    // Refractive ray
+    ray_was_scattered_by_object = record.refractive->scatter(
+        r, record, attenuation, scattered, coefficient);
+    if (ray_was_scattered_by_object)
+      if (coefficient > 0.0f)
+        final_color +=
+            coefficient * attenuation * ray_color(scattered, depth - 1, w);
+
+    return final_color;
   }
 
   // Background color

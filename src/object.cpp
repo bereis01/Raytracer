@@ -1,9 +1,18 @@
 #include "object.hpp"
 #include "material.hpp"
 
-sphere::sphere(const point3 &center, double radius, material *mat)
+sphere::sphere(const point3 &center, double radius, material *diffuse,
+               material *reflective, material *refractive)
     : center(center), radius(std::fmax(0, radius)) {
-  this->mat = mat;
+  this->diffuse = diffuse;
+  this->reflective = reflective;
+  this->refractive = refractive;
+}
+
+sphere::~sphere() {
+  delete this->diffuse;
+  delete this->reflective;
+  delete this->refractive;
 }
 
 bool sphere::check_hit(const ray &r, interval ray_t, hit_record &record) const {
@@ -37,7 +46,9 @@ bool sphere::check_hit(const ray &r, interval ray_t, hit_record &record) const {
   record.point = r.at(record.t);
   vec3 outward_normal = (record.point - this->center) / this->radius;
   record.adjust_normal_for_ray(r, outward_normal);
-  record.mat = this->mat;
+  record.diffuse = this->diffuse;
+  record.reflective = this->reflective;
+  record.refractive = this->refractive;
 
   return true;
 }
