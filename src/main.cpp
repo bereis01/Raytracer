@@ -118,9 +118,9 @@ int main(int argc, char *argv[]) {
 
     input_file >> x >> y >> z; // Attenuation parameters
 
-    texture *tex = new solid(light_color);
+    texture *tex = new solid(5.0f * light_color);
     light *lig = new light(tex);
-    rt_world.add_bulb(light_pos, 25.0f, lig);
+    rt_world.add_bulb(light_pos, 0.1f, lig);
   }
 
   ////////////////
