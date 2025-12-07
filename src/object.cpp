@@ -15,6 +15,15 @@ sphere::~sphere() {
   delete this->refractive;
 }
 
+void sphere::get_sphere_uv(const point3 &p, double &u, double &v) {
+  // Maps the given point p to 2D space of uv
+  double theta = std::acos(-p.y());
+  double phi = std::atan2(-p.z(), p.x()) + mathconst::pi;
+
+  u = phi / (2 * mathconst::pi);
+  v = theta / mathconst::pi;
+}
+
 bool sphere::check_hit(const ray &r, interval ray_t, hit_record &record) const {
   // Vector from the ray's origin to the sphere's center
   vec3 eye_to_sphere = this->center - r.get_origin();
@@ -49,6 +58,7 @@ bool sphere::check_hit(const ray &r, interval ray_t, hit_record &record) const {
   record.diffuse = this->diffuse;
   record.reflective = this->reflective;
   record.refractive = this->refractive;
+  this->get_sphere_uv(outward_normal, record.tex_u, record.tex_v);
 
   return true;
 }

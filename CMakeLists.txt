@@ -9,8 +9,6 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 include_directories(include/)
 
-# add_subdirectory(vendored/SDL EXCLUDE_FROM_ALL)
-
 add_executable(${PROJECT_NAME} 
                 src/camera.cpp
                 src/color.cpp
@@ -18,6 +16,5 @@ add_executable(${PROJECT_NAME}
                 src/main.cpp
                 src/material.cpp
                 src/object.cpp
+                src/texture.cpp
                 src/world.cpp)
-
-# target_link_libraries(${PROJECT_NAME} PRIVATE SDL2::SDL2)

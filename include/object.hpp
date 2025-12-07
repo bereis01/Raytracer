@@ -10,11 +10,16 @@ class hit_record {
 public:
   point3 point;
   vec3 normal;
+
   material *diffuse;
   material *reflective;
   material *refractive;
+
   double t;
   bool is_ray_outside;
+
+  double tex_u;
+  double tex_v;
 
   void adjust_normal_for_ray(const ray &r, const vec3 &outward_normal) {
     // Makes the normal point opposite of the ray
@@ -40,6 +45,8 @@ public:
 
   bool check_hit(const ray &r, interval ray_t,
                  hit_record &record) const override;
+
+  static void get_sphere_uv(const point3 &p, double &u, double &v);
 
 private:
   // Geometric properties

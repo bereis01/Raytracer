@@ -12,7 +12,8 @@ bool diffuse::scatter(const ray &incident, const hit_record &record,
     scatter_direction = record.normal;
 
   scattered = ray(record.point, scatter_direction);
-  attenuation = this->coloration;
+  attenuation =
+      this->coloration->value(record.tex_u, record.tex_v, record.point);
   coefficient = this->coefficient;
   return true;
 }

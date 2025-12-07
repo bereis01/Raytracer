@@ -1,5 +1,7 @@
 #include "camera.hpp"
+#include "color.hpp"
 #include "material.hpp"
+#include "texture.hpp"
 #include "vec3.hpp"
 #include "world.hpp"
 #include <fstream>
@@ -8,8 +10,16 @@
 class pigment_description {
 public:
   pigment_description(std::string type, color c) : type(type), c(c) {}
+  pigment_description(std::string type, color c1, color c2, double checker_size)
+      : type(type), c(c1), alt(c2), checker_size((checker_size)) {}
+  pigment_description(std::string type, std::string image_path)
+      : type(type), image_path(image_path) {}
+
   std::string type;
   color c;
+  color alt;
+  double checker_size;
+  std::string image_path;
 };
 
 class material_description {
@@ -55,9 +65,12 @@ int main(int argc, char *argv[]) {
   std::vector<material_description> material_descriptions;
 
   // Temporary ground
-  diffuse *dif_mat = new diffuse(color(0.5f, 0.5f, 0.5f), 1.0f);
+  image *img_tex = new image("./textures/earthmap.jpg");
+
+  diffuse *dif_mat = new diffuse(img_tex, 1.0f);
   reflective *rfl_mat = new reflective(color(0, 0, 0), 0.0f, 0.0f);
   refractive *rfr_mat = new refractive(1.5f, 0.0f);
+
   rt_world.add_sphere(point3(0.0f, -1100.0f, -100.0f), 1000.0f, dif_mat,
                       rfl_mat, rfr_mat);
 
@@ -82,8 +95,8 @@ int main(int argc, char *argv[]) {
 
   rt_cam.aspect_ratio = 4.0f / 3.0f;
   rt_cam.img_width = 800;
-  rt_cam.samples_per_pixel = 1;
-  rt_cam.max_recursion_depth = 10;
+  rt_cam.samples_per_pixel = 10;
+  rt_cam.max_recursion_depth = 3;
   rt_cam.defocus_angle = 0.0f;
   rt_cam.focus_distance = 10.0f;
 
@@ -132,23 +145,28 @@ int main(int argc, char *argv[]) {
     }
 
     else if (pigment_type == "checker") {
+      input_file >> x >> y >> z;
+      color c1(x, y, z);
+
+      input_file >> x >> y >> z;
+      color c2(x, y, z);
+
       double side;
-      input_file >> x >> y >> z;
-      input_file >> x >> y >> z;
       input_file >> side;
 
       pigment_descriptions.emplace_back(
-          pigment_description(pigment_type, color(x, y, z)));
+          pigment_description(pigment_type, c1, c1, side));
     }
 
     else if (pigment_type == "texmap") {
       std::string texture;
       input_file >> texture;
+
       input_file >> x >> y >> z >> w;
       input_file >> x >> y >> z >> w;
 
       pigment_descriptions.emplace_back(
-          pigment_description(pigment_type, color(x, y, z)));
+          pigment_description(pigment_type, texture));
     }
   }
 
@@ -189,9 +207,18 @@ int main(int argc, char *argv[]) {
       pigment_description pig_param = pigment_descriptions[pigment_index];
       material_description mat_param = material_descriptions[material_index];
 
-      diffuse *dif_mat = new diffuse(pig_param.c, mat_param.kd);
+      texture *tex = nullptr;
+      if (pig_param.type == "solid")
+        tex = new solid(pig_param.c);
+      else if (pig_param.type == "checker")
+        tex = new checker(pig_param.checker_size, pig_param.c, pig_param.alt);
+      else if (pig_param.type == "texmap")
+        tex = new image(pig_param.image_path.c_str());
+
+      diffuse *dif_mat = new diffuse(tex, mat_param.kd);
       reflective *rfl_mat = new reflective(pig_param.c, 0.0f, mat_param.kr);
       refractive *rfr_mat = new refractive(mat_param.ior, mat_param.kt);
+
       rt_world.add_sphere(point3(x, y, z), radius, dif_mat, rfl_mat, rfr_mat);
     }
 

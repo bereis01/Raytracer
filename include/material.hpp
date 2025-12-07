@@ -2,6 +2,7 @@
 
 #include "color.hpp"
 #include "object.hpp"
+#include "texture.hpp"
 
 class material {
 public:
@@ -16,7 +17,8 @@ public:
 
 class diffuse : public material {
 public:
-  diffuse(const color &coloration, double coefficient)
+  ~diffuse() { delete this->coloration; }
+  diffuse(texture *coloration, double coefficient)
       : coloration(coloration), coefficient(coefficient) {}
 
   bool scatter(const ray &incident, const hit_record &record,
@@ -24,7 +26,7 @@ public:
                double &coefficient) const override;
 
 private:
-  color coloration; // How much color it absorbs
+  texture *coloration;
   double coefficient;
 };
 
