@@ -89,7 +89,7 @@ int main(int argc, char *argv[]) {
 
   rt_cam.aspect_ratio = 4.0f / 3.0f;
   rt_cam.img_width = 800;
-  rt_cam.samples_per_pixel = 10;
+  rt_cam.samples_per_pixel = 20;
   rt_cam.max_recursion_depth = 3;
   rt_cam.defocus_angle = 0.0f;
   rt_cam.focus_distance = 10.0f;
@@ -118,8 +118,9 @@ int main(int argc, char *argv[]) {
 
     input_file >> x >> y >> z; // Attenuation parameters
 
-    /* light *lig_mat = new light(4.0f * light_color);
-    rt_world.add_bulb(light_pos, 10.0f, lig_mat); */
+    texture *tex = new solid(light_color);
+    light *lig = new light(tex);
+    rt_world.add_bulb(light_pos, 25.0f, lig);
   }
 
   ////////////////

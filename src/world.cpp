@@ -14,10 +14,10 @@ void world::add_sphere(point3 center, double radius, material *mat) {
   objects.emplace_back(ball);
 }
 
-/* void world::add_bulb(point3 center, double radius, material *light) {
-  bulb *ball = new bulb(center, radius, light);
+void world::add_bulb(point3 center, double radius, light *lig) {
+  bulb *ball = new bulb(center, radius, lig);
   objects.emplace_back(ball);
-} */
+}
 
 bool world::check_hit(const ray &r, interval ray_t, hit_record &record) const {
   // Finds the first object the ray hits, if it hits any

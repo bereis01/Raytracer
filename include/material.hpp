@@ -31,7 +31,7 @@ public:
   }
 
   color get_ambient(double &ambient_light_coeff, double u, double v,
-                        const point3 &p) {
+                    const point3 &p) {
     ambient_light_coeff = this->ambient_light_coeff;
     return this->coloration->value(u, v, p);
   }
@@ -59,16 +59,15 @@ private:
   double refraction_index = 1.0f;
 };
 
-/* class light : public material {
+class light {
 public:
   light(texture *coloration) : coloration(coloration) {}
-  light(const color &emit) : coloration(new solid(emit)) {}
   ~light() { delete this->coloration; }
 
-  color emitted(double u, double v, const point3 &p) const override {
+  color emitted(double u, double v, const point3 &p) const {
     return coloration->value(u, v, p);
   }
 
 private:
   texture *coloration;
-}; */
+};

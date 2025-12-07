@@ -5,13 +5,16 @@
 
 // Pre-defined class to avoid circular reference
 class material;
+class light;
 
 class hit_record {
 public:
   point3 point;
   vec3 normal;
 
+  bool is_light;
   material *mat;
+  light *lig;
 
   double t;
   bool is_ray_outside;
@@ -53,15 +56,14 @@ private:
   material *mat;
 };
 
-/* class bulb : public object {
+class bulb : public object {
 public:
-  bulb(const point3 &center, double radius, material *light);
-  ~bulb();
+  bulb(const point3 &center, double radius, light *lig);
 
   bool check_hit(const ray &r, interval ray_t,
                  hit_record &record) const override;
 
-  static void get_bulb_uv(const point3 &p, double &u, double &v);
+  static void get_sphere_uv(const point3 &p, double &u, double &v);
 
 private:
   // Geometric properties
@@ -69,5 +71,5 @@ private:
   double radius;
 
   // Color properties
-  material *light;
-}; */
+  light *lig;
+};

@@ -109,6 +109,11 @@ color camera::ray_color(const ray &r, int depth, const world &w) const {
   // If an object was hit, decides the color of the pixel based on its color
   // Recursive calls this function for the reflected ray
   if (hit_anything) {
+    // Just return its color if it is a light
+    if (record.is_light) {
+      return record.lig->emitted(record.tex_u, record.tex_v, record.point);
+    }
+
     ray scattered;
     color attenuation;
     bool ray_was_scattered_by_object;

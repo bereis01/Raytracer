@@ -9,7 +9,7 @@ public:
   ~world();
 
   void add_sphere(point3 center, double radius, material *mat);
-  // void add_bulb(point3 center, double radius, material *light);
+  void add_bulb(point3 center, double radius, light *lig);
 
   bool check_hit(const ray &r, interval ray_t, hit_record &record) const;
 
