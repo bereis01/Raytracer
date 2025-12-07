@@ -6,54 +6,35 @@
 
 class material {
 public:
-  virtual ~material() = default;
+  material(texture *coloration);
+  material(texture *coloration, double fuzz, double ambient_light_coeff,
+           double diffuse_coeff, double specular_coeff, double specular_alpha,
+           double reflection_coeff, double refraction_coeff,
+           double refraction_index);
 
-  virtual bool scatter(const ray &incident, const hit_record &record,
+  ~material();
+
+  bool scatter_diffuse(const ray &incident, const hit_record &record,
                        color &attenuation, ray &scattered,
-                       double &coefficient) const {
-    return false;
+                       double &diffuse_coeff) const;
+
+  bool scatter_reflective(const ray &incident, const hit_record &record,
+                          color &attenuation, ray &scattered,
+                          double &reflection_coeff) const;
+
+  bool scatter_refractive(const ray &incident, const hit_record &record,
+                          color &attenuation, ray &scattered,
+                          double &refraction_coeff) const;
+
+  color emitted(double u, double v, const point3 &p) const {
+    return color(0.0f, 0.0f, 0.0f);
   }
-};
 
-class diffuse : public material {
-public:
-  ~diffuse() { delete this->coloration; }
-  diffuse(texture *coloration, double coefficient)
-      : coloration(coloration), coefficient(coefficient) {}
-
-  bool scatter(const ray &incident, const hit_record &record,
-               color &attenuation, ray &scattered,
-               double &coefficient) const override;
-
-private:
-  texture *coloration;
-  double coefficient;
-};
-
-class reflective : public material {
-public:
-  reflective(const color &coloration, double fuzz, double coefficient)
-      : coloration(coloration), fuzz(fuzz < 1 ? fuzz : 1),
-        coefficient(coefficient) {}
-
-  bool scatter(const ray &incident, const hit_record &record,
-               color &attenuation, ray &scattered,
-               double &coefficient) const override;
-
-private:
-  color coloration; // How much color it absorbs
-  double fuzz;
-  double coefficient;
-};
-
-class refractive : public material {
-public:
-  refractive(double refraction_index, double coefficient)
-      : refraction_index(refraction_index), coefficient(coefficient) {}
-
-  bool scatter(const ray &incident, const hit_record &record,
-               color &attenuation, ray &scattered,
-               double &coefficient) const override;
+  color get_ambient(double &ambient_light_coeff, double u, double v,
+                        const point3 &p) {
+    ambient_light_coeff = this->ambient_light_coeff;
+    return this->coloration->value(u, v, p);
+  }
 
 private:
   static double reflectance(double cosine, double refraction_index) {
@@ -63,6 +44,31 @@ private:
     return r0 + (1 - r0) * std::pow((1 - cosine), 5);
   }
 
-  double refraction_index;
-  double coefficient;
+  texture *coloration;
+
+  double ambient_light_coeff = 0.1f;
+
+  double diffuse_coeff = 1.0f;
+  double specular_coeff = 0.5f;
+  double specular_alpha = 1.0f;
+
+  double reflection_coeff = 0.0f;
+  double fuzz = 0.0f;
+
+  double refraction_coeff = 0.0f;
+  double refraction_index = 1.0f;
 };
+
+/* class light : public material {
+public:
+  light(texture *coloration) : coloration(coloration) {}
+  light(const color &emit) : coloration(new solid(emit)) {}
+  ~light() { delete this->coloration; }
+
+  color emitted(double u, double v, const point3 &p) const override {
+    return coloration->value(u, v, p);
+  }
+
+private:
+  texture *coloration;
+}; */

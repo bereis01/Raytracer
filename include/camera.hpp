@@ -22,6 +22,7 @@ public:
   // Rendering parameters
   int samples_per_pixel = 10;
   int max_recursion_depth = 10;
+  color background_color = color(0.0f, 0.0f, 0.0f);
 
 private:
   void initialize();

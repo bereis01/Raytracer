@@ -11,9 +11,7 @@ public:
   point3 point;
   vec3 normal;
 
-  material *diffuse;
-  material *reflective;
-  material *refractive;
+  material *mat;
 
   double t;
   bool is_ray_outside;
@@ -39,9 +37,7 @@ public:
 
 class sphere : public object {
 public:
-  sphere(const point3 &center, double radius, material *diffuse,
-         material *reflective, material *refractive);
-  ~sphere();
+  sphere(const point3 &center, double radius, material *mat);
 
   bool check_hit(const ray &r, interval ray_t,
                  hit_record &record) const override;
@@ -54,7 +50,24 @@ private:
   double radius;
 
   // Color properties
-  material *diffuse;
-  material *reflective;
-  material *refractive;
+  material *mat;
 };
+
+/* class bulb : public object {
+public:
+  bulb(const point3 &center, double radius, material *light);
+  ~bulb();
+
+  bool check_hit(const ray &r, interval ray_t,
+                 hit_record &record) const override;
+
+  static void get_bulb_uv(const point3 &p, double &u, double &v);
+
+private:
+  // Geometric properties
+  point3 center;
+  double radius;
+
+  // Color properties
+  material *light;
+}; */

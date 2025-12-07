@@ -1,8 +1,27 @@
 #include "material.hpp"
 
-bool diffuse::scatter(const ray &incident, const hit_record &record,
-                      color &attenuation, ray &scattered,
-                      double &coefficient) const {
+material::material(texture *coloration) { this->coloration = coloration; }
+
+material::material(texture *coloration, double fuzz, double ambient_light_coeff,
+                   double diffuse_coeff, double specular_coeff,
+                   double specular_alpha, double reflection_coeff,
+                   double refraction_coeff, double refraction_index) {
+  this->coloration = coloration;
+  this->ambient_light_coeff = ambient_light_coeff;
+  this->diffuse_coeff = diffuse_coeff;
+  this->specular_coeff = specular_coeff;
+  this->specular_alpha = specular_alpha;
+  this->reflection_coeff = reflection_coeff;
+  this->fuzz = fuzz;
+  this->refraction_coeff = refraction_coeff;
+  this->refraction_index = refraction_index;
+}
+
+material::~material() { delete this->coloration; }
+
+bool material::scatter_diffuse(const ray &incident, const hit_record &record,
+                               color &attenuation, ray &scattered,
+                               double &diffuse_coeff) const {
   // Generates the direction to which the ray is reflected
   // In the case of diffuse material, "random" following the normal
   vec3 scatter_direction = record.normal + random_unit_vector();
@@ -14,13 +33,13 @@ bool diffuse::scatter(const ray &incident, const hit_record &record,
   scattered = ray(record.point, scatter_direction);
   attenuation =
       this->coloration->value(record.tex_u, record.tex_v, record.point);
-  coefficient = this->coefficient;
+  diffuse_coeff = this->diffuse_coeff;
   return true;
 }
 
-bool reflective::scatter(const ray &incident, const hit_record &record,
-                         color &attenuation, ray &scattered,
-                         double &coefficient) const {
+bool material::scatter_reflective(const ray &incident, const hit_record &record,
+                                  color &attenuation, ray &scattered,
+                                  double &reflection_coeff) const {
   // Generates the direction to which the ray is reflected
   // In the case of reflective material, symmetric according to normal
   vec3 scatter_direction = reflect(incident.get_direction(), record.normal);
@@ -34,14 +53,15 @@ bool reflective::scatter(const ray &incident, const hit_record &record,
     scatter_direction = record.normal;
 
   scattered = ray(record.point, scatter_direction);
-  attenuation = this->coloration;
-  coefficient = this->coefficient;
+  attenuation =
+      this->coloration->value(record.tex_u, record.tex_v, record.point);
+  reflection_coeff = this->reflection_coeff;
   return (dot(scattered.get_direction(), record.normal) > 0);
 }
 
-bool refractive::scatter(const ray &incident, const hit_record &record,
-                         color &attenuation, ray &scattered,
-                         double &coefficient) const {
+bool material::scatter_refractive(const ray &incident, const hit_record &record,
+                                  color &attenuation, ray &scattered,
+                                  double &refraction_coeff) const {
   // Adjusts the refraction index according to if the ray is entering or exiting
   // the material
   double refraction_index = record.is_ray_outside
@@ -67,6 +87,6 @@ bool refractive::scatter(const ray &incident, const hit_record &record,
 
   scattered = ray(record.point, scatter_direction);
   attenuation = color(1.0, 1.0, 1.0);
-  coefficient = this->coefficient;
+  refraction_coeff = this->refraction_coeff;
   return true;
 }

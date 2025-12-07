@@ -111,38 +111,46 @@ color camera::ray_color(const ray &r, int depth, const world &w) const {
   if (hit_anything) {
     ray scattered;
     color attenuation;
-    double coefficient;
     bool ray_was_scattered_by_object;
     color final_color = color(0.0f, 0.0f, 0.0f);
 
+    // Ambient color
+    double ambient_light_coeff;
+    color object_color = record.mat->get_ambient(
+        ambient_light_coeff, record.tex_u, record.tex_v, record.point);
+    final_color += ambient_light_coeff * object_color;
+
     // Diffuse ray
-    ray_was_scattered_by_object =
-        record.diffuse->scatter(r, record, attenuation, scattered, coefficient);
+    double diffuse_c;
+    color diffuse_color;
+    ray_was_scattered_by_object = record.mat->scatter_diffuse(
+        r, record, attenuation, scattered, diffuse_c);
     if (ray_was_scattered_by_object)
-      if (coefficient > 0.0f)
-        final_color +=
-            coefficient * attenuation * ray_color(scattered, depth - 1, w);
+      diffuse_color = attenuation * ray_color(scattered, depth - 1, w);
 
     // Reflective ray
-    ray_was_scattered_by_object = record.reflective->scatter(
-        r, record, attenuation, scattered, coefficient);
-    if (ray_was_scattered_by_object)
-      if (coefficient > 0.0f)
-        final_color +=
-            coefficient * attenuation * ray_color(scattered, depth - 1, w);
+    double reflective_c;
+    color reflective_color;
+    ray_was_scattered_by_object = record.mat->scatter_reflective(
+        r, record, attenuation, scattered, reflective_c);
+    if (ray_was_scattered_by_object && (reflective_c > 0.0f))
+      reflective_color = attenuation * ray_color(scattered, depth - 1, w);
 
     // Refractive ray
-    ray_was_scattered_by_object = record.refractive->scatter(
-        r, record, attenuation, scattered, coefficient);
-    if (ray_was_scattered_by_object)
-      if (coefficient > 0.0f)
-        final_color +=
-            coefficient * attenuation * ray_color(scattered, depth - 1, w);
+    double refractive_c;
+    color refractive_color;
+    ray_was_scattered_by_object = record.mat->scatter_refractive(
+        r, record, attenuation, scattered, refractive_c);
+    if (ray_was_scattered_by_object && (refractive_c > 0.0f))
+      refractive_color = attenuation * ray_color(scattered, depth - 1, w);
 
+    final_color += (diffuse_c * diffuse_color) +
+                   (reflective_c * reflective_color) +
+                   (refractive_c * refractive_color);
     return final_color;
   }
 
-  // Background color
+  // If the ray hits nothing, returns background color
   vec3 unit_direction = unit_vector(r.get_direction());
   double a = 0.5f * (unit_direction.y() + 1.0f);
   return (1.0f - a) * color(1.0f, 1.0f, 1.0f) + a * color(0.5f, 0.7f, 1.0f);

@@ -51,7 +51,6 @@ int main(int argc, char *argv[]) {
 
   // Shared variables
   double x, y, z, w;
-  material *mat;
 
   ////////////////////
   // Declaring objects
@@ -65,14 +64,9 @@ int main(int argc, char *argv[]) {
   std::vector<material_description> material_descriptions;
 
   // Temporary ground
-  image *img_tex = new image("./textures/earthmap.jpg");
-
-  diffuse *dif_mat = new diffuse(img_tex, 1.0f);
-  reflective *rfl_mat = new reflective(color(0, 0, 0), 0.0f, 0.0f);
-  refractive *rfr_mat = new refractive(1.5f, 0.0f);
-
-  rt_world.add_sphere(point3(0.0f, -1100.0f, -100.0f), 1000.0f, dif_mat,
-                      rfl_mat, rfr_mat);
+  checker *tex = new checker(10.0f, color(0, 0, 0), color(1, 1, 1));
+  material *mat = new material(tex);
+  rt_world.add_sphere(point3(0.0f, -1100.0f, -100.0f), 1000.0f, mat);
 
   ///////////////
   // Camera setup
@@ -111,18 +105,21 @@ int main(int argc, char *argv[]) {
 
   // Ambient light
   input_file >> x >> y >> z;
-
-  input_file >> x >> y >> z;
-
+  input_file >> x >> y >> z; // Color of the background
   input_file >> x >> y >> z;
 
   // Other lights
   for (int i = 0; i < (num_of_lights - 1); i++) {
     input_file >> x >> y >> z;
+    point3 light_pos = point3(x, y, z);
 
     input_file >> x >> y >> z;
+    color light_color = color(x, y, z);
 
-    input_file >> x >> y >> z;
+    input_file >> x >> y >> z; // Attenuation parameters
+
+    /* light *lig_mat = new light(4.0f * light_color);
+    rt_world.add_bulb(light_pos, 10.0f, lig_mat); */
   }
 
   ////////////////
@@ -215,11 +212,10 @@ int main(int argc, char *argv[]) {
       else if (pig_param.type == "texmap")
         tex = new image(pig_param.image_path.c_str());
 
-      diffuse *dif_mat = new diffuse(tex, mat_param.kd);
-      reflective *rfl_mat = new reflective(pig_param.c, 0.0f, mat_param.kr);
-      refractive *rfr_mat = new refractive(mat_param.ior, mat_param.kt);
-
-      rt_world.add_sphere(point3(x, y, z), radius, dif_mat, rfl_mat, rfr_mat);
+      material *mat = new material(tex, 0.0f, mat_param.ka, mat_param.kd,
+                                   mat_param.ks, mat_param.alpha, mat_param.kr,
+                                   mat_param.kt, mat_param.ior);
+      rt_world.add_sphere(point3(x, y, z), radius, mat);
     }
 
     else if (object_type == "polyhedron") {

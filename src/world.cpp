@@ -9,11 +9,15 @@ world::~world() {
   }
 }
 
-void world::add_sphere(point3 center, double radius, material *diffuse,
-                       material *reflective, material *refractive) {
-  sphere *ball = new sphere(center, radius, diffuse, reflective, refractive);
+void world::add_sphere(point3 center, double radius, material *mat) {
+  sphere *ball = new sphere(center, radius, mat);
   objects.emplace_back(ball);
 }
+
+/* void world::add_bulb(point3 center, double radius, material *light) {
+  bulb *ball = new bulb(center, radius, light);
+  objects.emplace_back(ball);
+} */
 
 bool world::check_hit(const ray &r, interval ray_t, hit_record &record) const {
   // Finds the first object the ray hits, if it hits any
