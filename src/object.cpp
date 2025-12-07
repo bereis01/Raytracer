@@ -1,7 +1,10 @@
 #include "object.hpp"
+#include "material.hpp"
 
 sphere::sphere(const point3 &center, double radius, material *mat)
     : center(center), radius(std::fmax(0, radius)), mat(mat) {}
+
+sphere::~sphere() { delete this->mat; }
 
 void sphere::get_sphere_uv(const point3 &p, double &u, double &v) {
   // Maps the given point p to 2D space of uv
@@ -61,6 +64,8 @@ void bulb::get_sphere_uv(const point3 &p, double &u, double &v) {
   u = phi / (2 * mathconst::pi);
   v = theta / mathconst::pi;
 }
+
+bulb::~bulb() { delete this->lig; }
 
 bool bulb::check_hit(const ray &r, interval ray_t, hit_record &record) const {
   // Vector from the ray's origin to the sphere's center

@@ -41,6 +41,7 @@ public:
 class sphere : public object {
 public:
   sphere(const point3 &center, double radius, material *mat);
+  ~sphere();
 
   bool check_hit(const ray &r, interval ray_t,
                  hit_record &record) const override;
@@ -59,6 +60,7 @@ private:
 class bulb : public object {
 public:
   bulb(const point3 &center, double radius, light *lig);
+  ~bulb();
 
   bool check_hit(const ray &r, interval ray_t,
                  hit_record &record) const override;
