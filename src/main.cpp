@@ -50,22 +50,22 @@ int parse(int argc, char *argv[]) {
   std::ifstream input_file(input_file_name);
   std::ofstream output_file(output_file_name);
 
-  int width = 800;
-  int height = 600;
+  int width = 1200;
+  int height = 900;
   if (argc >= 5) {
     width = std::stoi(argv[3]);
     height = std::stoi(argv[4]);
   }
 
-  int samples_per_pixel = 10;
-  int max_recursion_depth = 3;
+  int samples_per_pixel = 20;
+  int max_recursion_depth = 5;
   if (argc >= 7) {
     samples_per_pixel = std::stoi(argv[5]);
     max_recursion_depth = std::stoi(argv[6]);
   }
 
   double defocus_angle = 0.0f;
-  double focus_distance = 10.0f;
+  double focus_distance = 1.0f;
   if (argc >= 9) {
     defocus_angle = std::stod(argv[7]);
     focus_distance = std::stod(argv[8]);
@@ -282,10 +282,10 @@ int scene1(int argc, char *argv[]) {
 
   camera cam;
 
-  cam.img_width = 400;
-  cam.img_height = 300;
-  cam.samples_per_pixel = 10;
-  cam.max_recursion_depth = 3;
+  cam.img_width = 1200;
+  cam.img_height = 900;
+  cam.samples_per_pixel = 20;
+  cam.max_recursion_depth = 5;
 
   cam.fov = 20;
   cam.eye = point3(13, 2, 3);
@@ -361,10 +361,10 @@ int scene2(int argc, char *argv[]) {
 
   camera cam;
 
-  cam.img_width = 400;
-  cam.img_height = 300;
-  cam.samples_per_pixel = 10;
-  cam.max_recursion_depth = 3;
+  cam.img_width = 1200;
+  cam.img_height = 900;
+  cam.samples_per_pixel = 20;
+  cam.max_recursion_depth = 5;
 
   cam.fov = 20;
   cam.eye = point3(13, 2, 3);
@@ -389,4 +389,44 @@ int scene2(int argc, char *argv[]) {
   return 0;
 }
 
-int main(int argc, char *argv[]) { return scene2(argc, argv); }
+int scene3(int argc, char *argv[]) {
+  char *input_file_name = argv[1];
+  char *output_file_name = argv[2];
+  std::ifstream input_file(input_file_name);
+  std::ofstream output_file(output_file_name);
+
+  camera cam;
+
+  cam.img_width = 1200;
+  cam.img_height = 900;
+  cam.samples_per_pixel = 100;
+  cam.max_recursion_depth = 20;
+
+  world w;
+
+  texture *tex = new solid(color(0.8, 0.8, 0.0));
+  material *mat = new material(tex);
+  w.add_sphere(point3(0.0, -100.5, -1.0), 100.0, mat);
+
+  tex = new image("./textures/earthmap.jpg");
+  mat = new material(tex);
+  w.add_sphere(point3(0.0, 0.0, -1.2), 0.5, mat);
+
+  tex = new solid(color(0, 0, 0));
+  mat = new material(tex, 0, 0, 0, 0, 0, 0, 1.0f, 1.5f);
+  w.add_sphere(point3(-1.0, 0.0, -1.0), 0.5, mat);
+
+  tex = new solid(color(0, 0, 0));
+  mat = new material(tex, 0, 0, 0, 0, 0, 0, 1.0f, 1.0f / 1.5f);
+  w.add_sphere(point3(-1.0, 0.0, -1.0), 0.4, mat);
+
+  tex = new solid(color(0.8, 0.6, 0.2));
+  mat = new material(tex, 0, 0, 0, 0, 0, 1, 0, 0);
+  w.add_sphere(point3(1.0, 0.0, -1.0), 0.5, mat);
+
+  cam.render(w, output_file);
+
+  return 0;
+}
+
+int main(int argc, char *argv[]) { return parse(argc, argv); }

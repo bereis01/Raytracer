@@ -12,7 +12,7 @@ solid        1  0  0
 solid        0  1  0
 solid        0  0  1
 checker     .5 .2 .8    .1 .7 .2    .5
-texmap	     blur.ppm
+texmap	     ./textures/earthmap.jpg
         0.20  0.00  0.00   0.00
         0.00  0.20  0.00   0.00
 2
