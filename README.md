@@ -45,9 +45,9 @@ $ ./build/raytracer test6.in test6.ppm
 Para executar as renderizações "extras" apresentadas na documentação, execute:
 
 ```sh
-$ ./build/sample1 dummy sample1.ppm
-$ ./build/sample2 dummy sample2.ppm
-$ ./build/sample3 dummy sample3.ppm
+$ ./build/scene1 dummy scene1.ppm
+$ ./build/scene2 dummy scene2.ppm
+$ ./build/scene3 dummy scene3.ppm
 ```
 
 ...estes últimos comandos utilizam executáveis pré-compilados disponibilizados junto com o projeto. Eles não aceitam os parâmetros extras.
