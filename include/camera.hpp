@@ -8,8 +8,8 @@ public:
   void render(const world &w, std::ofstream &output_file);
 
   // Image parameters
-  double aspect_ratio = 4.0f / 3.0f;
-  int img_width = 400;
+  int img_width = 800;
+  int img_height = 600;
 
   // Camera parameters
   double fov = 90; // In degrees
@@ -30,7 +30,7 @@ private:
   color ray_color(const ray &r, int depth, const world &w) const;
 
   // Image parameters
-  int img_height;
+  double aspect_ratio;
   point3 pixel_pos_upper_left;
   vec3 pixel_u;
   vec3 pixel_v;

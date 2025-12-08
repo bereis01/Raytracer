@@ -172,3 +172,9 @@ inline point3 sample_disk(vec3 center, vec3 horizontal_radius,
   vec3 p = random_in_unit_disk();
   return center + (p[0] * horizontal_radius) + (p[1] * vertical_radius);
 }
+
+inline double squared_distance(vec3 a, vec3 b) {
+  return ((a.x() - b.x()) * (a.x() - b.x())) +
+         ((a.y() - b.y()) * (a.y() - b.y())) +
+         ((a.z() - b.z()) * (a.z() - b.z()));
+}

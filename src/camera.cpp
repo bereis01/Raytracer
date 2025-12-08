@@ -44,8 +44,8 @@ void camera::render(const world &w, std::ofstream &output_file) {
 
 void camera::initialize() {
   // Image parameters
-  this->img_height = int(img_width / aspect_ratio);
-  this->img_height = (this->img_height < 1) ? 1 : this->img_height;
+  double actual_aspect_ratio =
+      double(this->img_width) / double(this->img_height);
 
   // Rendering parameters
   this->pixel_sample_color_scale = 1.0 / samples_per_pixel;
@@ -54,8 +54,6 @@ void camera::initialize() {
   double theta = degrees_to_radians(this->fov);
   double h = std::tan(theta / 2.0f);
 
-  double actual_aspect_ratio =
-      double(this->img_width) / double(this->img_height);
   double vp_height = 2.0f * h * this->focus_distance;
   double vp_width = vp_height * actual_aspect_ratio;
 

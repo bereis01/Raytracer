@@ -1,5 +1,7 @@
 #include "object.hpp"
 #include "material.hpp"
+#include "vec3.hpp"
+#include <algorithm>
 
 sphere::sphere(const point3 &center, double radius, material *mat)
     : center(center), radius(std::fmax(0, radius)), mat(mat) {}
@@ -103,4 +105,81 @@ bool bulb::check_hit(const ray &r, interval ray_t, hit_record &record) const {
   this->get_sphere_uv(outward_normal, record.tex_u, record.tex_v);
 
   return true;
+}
+
+polyhedron::polyhedron(std::vector<vec3> normals,
+                       std::vector<double> intercepts, material *mat) {
+  this->normals = normals;
+  this->intercepts = intercepts;
+  this->mat = mat;
+}
+
+//polyhedron::~polyhedron() { delete this->mat; }
+
+bool polyhedron::check_hit(const ray &r, interval ray_t,
+                           hit_record &record) const {
+  std::cout << "aaaaaaa" << std::endl;
+
+  std::vector<point3> intersection_points;
+  for (int i = 0; i < this->normals.size(); i++) {
+    vec3 normal = this->normals[i];
+    double D = this->intercepts[i];
+    bool hit = true;
+
+    // Gets the point of interception between the ray and the plane
+    double denom = dot(normal, r.get_direction());
+    if (std::fabs(denom) < 1e-8) // No hit if the ray is parallel to the plane.
+      hit = false;
+    double t = (D - dot(normal, r.get_origin())) / denom;
+    if (!ray_t.contains(t)) // Clips on the interval
+      hit = false;
+    point3 intersection = r.at(t);
+
+    // Saves the point
+    if (hit)
+      intersection_points.emplace_back(intersection);
+  }
+
+  // Orders the points by distance
+  std::sort(intersection_points.begin(), intersection_points.end(),
+            squared_distance);
+
+  // Traverses them
+  for (int i = 0; i < intersection_points.size(); i++) {
+    point3 point = intersection_points[i];
+
+    // Checks if they are inside or on the border of every plane
+    bool hit = true;
+    vec3 normal;
+    double D;
+    for (int j = 0; j < this->normals.size(); j++) {
+      normal = this->normals[j];
+      D = this->intercepts[j];
+
+      double result = dot(normal, point) + D;
+      if (result > 0) {
+        hit = false;
+        break;
+      }
+    }
+
+    // If they are, return
+    if (hit) {
+      record.t =
+          (D - dot(normal, r.get_origin())) / dot(normal, r.get_direction());
+      record.point = point;
+      record.mat = this->mat;
+      record.lig = nullptr;
+      record.tex_u = 0.0f;
+      record.tex_v = 0.0f;
+      record.adjust_normal_for_ray(r, normal);
+      record.is_light = false;
+
+      std::cout << "bbbbbbbbbbbb" << std::endl;
+      return true;
+    }
+  }
+
+  std::cout << "bbbbbbbbbbbb" << std::endl;
+  return false;
 }

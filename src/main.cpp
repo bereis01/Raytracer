@@ -5,6 +5,7 @@
 #include "vec3.hpp"
 #include "world.hpp"
 #include <fstream>
+#include <string>
 #include <vector>
 
 class pigment_description {
@@ -49,6 +50,27 @@ int main(int argc, char *argv[]) {
   std::ifstream input_file(input_file_name);
   std::ofstream output_file(output_file_name);
 
+  int width = 800;
+  int height = 600;
+  if (argc >= 5) {
+    width = std::stoi(argv[3]);
+    height = std::stoi(argv[4]);
+  }
+
+  int samples_per_pixel = 10;
+  int max_recursion_depth = 3;
+  if (argc >= 7) {
+    samples_per_pixel = std::stoi(argv[3]);
+    max_recursion_depth = std::stoi(argv[4]);
+  }
+
+  double defocus_angle = 0.0f;
+  double focus_distance = 10.0f;
+  if (argc >= 9) {
+    defocus_angle = std::stod(argv[3]);
+    focus_distance = std::stod(argv[4]);
+  }
+
   // Shared variables
   double x, y, z, w;
 
@@ -87,12 +109,12 @@ int main(int argc, char *argv[]) {
   input_file >> fov;
   rt_cam.fov = fov;
 
-  rt_cam.aspect_ratio = 4.0f / 3.0f;
-  rt_cam.img_width = 800;
-  rt_cam.samples_per_pixel = 20;
-  rt_cam.max_recursion_depth = 3;
-  rt_cam.defocus_angle = 0.0f;
-  rt_cam.focus_distance = 10.0f;
+  rt_cam.img_width = width;
+  rt_cam.img_height = height;
+  rt_cam.samples_per_pixel = samples_per_pixel;
+  rt_cam.max_recursion_depth = max_recursion_depth;
+  rt_cam.defocus_angle = defocus_angle;
+  rt_cam.focus_distance = focus_distance;
 
   //////////////
   // Light setup
@@ -197,33 +219,40 @@ int main(int argc, char *argv[]) {
   std::string object_type;
   for (int i = 0; i < num_of_objects; i++) {
     input_file >> pigment_index >> material_index >> object_type;
+    pigment_description pig_param = pigment_descriptions[pigment_index];
+    material_description mat_param = material_descriptions[material_index];
+
+    texture *tex = nullptr;
+    if (pig_param.type == "solid")
+      tex = new solid(pig_param.c);
+    else if (pig_param.type == "checker")
+      tex = new checker(pig_param.checker_size, pig_param.c, pig_param.alt);
+    else if (pig_param.type == "texmap")
+      tex = new image(pig_param.image_path.c_str());
+
+    material *mat = new material(tex, 0.0f, mat_param.ka, mat_param.kd,
+                                 mat_param.ks, mat_param.alpha, mat_param.kr,
+                                 mat_param.kt, mat_param.ior);
 
     if (object_type == "sphere") {
       double radius;
       input_file >> x >> y >> z >> radius;
 
-      pigment_description pig_param = pigment_descriptions[pigment_index];
-      material_description mat_param = material_descriptions[material_index];
-
-      texture *tex = nullptr;
-      if (pig_param.type == "solid")
-        tex = new solid(pig_param.c);
-      else if (pig_param.type == "checker")
-        tex = new checker(pig_param.checker_size, pig_param.c, pig_param.alt);
-      else if (pig_param.type == "texmap")
-        tex = new image(pig_param.image_path.c_str());
-
-      material *mat = new material(tex, 0.0f, mat_param.ka, mat_param.kd,
-                                   mat_param.ks, mat_param.alpha, mat_param.kr,
-                                   mat_param.kt, mat_param.ior);
       rt_world.add_sphere(point3(x, y, z), radius, mat);
     }
 
     else if (object_type == "polyhedron") {
-      int num_of_faces;
+      /* int num_of_faces;
+      std::vector<vec3> normals;
+      std::vector<double> intercepts;
       for (int j = 0; j < num_of_faces; j++) {
-        input_file >> x >> y >> z >> w;
+        double intercept;
+        input_file >> x >> y >> z >> intercept;
+        normals.emplace_back(vec3(x, y, z));
+        intercepts.emplace_back(intercept);
       }
+
+      rt_world.add_polyhedron(normals, intercepts, mat); */
     }
   }
 

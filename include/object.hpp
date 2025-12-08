@@ -2,6 +2,7 @@
 
 #include "interval.hpp"
 #include "ray.hpp"
+#include <vector>
 
 // Pre-defined class to avoid circular reference
 class material;
@@ -74,4 +75,24 @@ private:
 
   // Color properties
   light *lig;
+};
+
+class polyhedron : public object {
+public:
+  polyhedron(std::vector<vec3> normals, std::vector<double> intercepts,
+             material *mat);
+  //~polyhedron();
+
+  bool check_hit(const ray &r, interval ray_t,
+                 hit_record &record) const override;
+
+  static void get_polyhedron_uv(const point3 &p, double &u, double &v);
+
+private:
+  // Geometric properties
+  std::vector<vec3> normals;
+  std::vector<double> intercepts;
+
+  // Color properties
+  material *mat;
 };

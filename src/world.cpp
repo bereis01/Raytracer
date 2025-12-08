@@ -1,4 +1,5 @@
 #include "world.hpp"
+#include "object.hpp"
 
 world::world() {}
 
@@ -17,6 +18,12 @@ void world::add_sphere(point3 center, double radius, material *mat) {
 void world::add_bulb(point3 center, double radius, light *lig) {
   bulb *ball = new bulb(center, radius, lig);
   objects.emplace_back(ball);
+}
+
+void world::add_polyhedron(std::vector<vec3> normals,
+                           std::vector<double> intercepts, material *mat) {
+  polyhedron *poly = new polyhedron(normals, intercepts, mat);
+  objects.emplace_back(poly);
 }
 
 bool world::check_hit(const ray &r, interval ray_t, hit_record &record) const {
