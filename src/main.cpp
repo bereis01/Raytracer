@@ -31,7 +31,7 @@ public:
   double ka, kd, ks, alpha, kr, kt, ior = 0.0f;
 };
 
-int main(int argc, char *argv[]) {
+int parse(int argc, char *argv[]) {
   /////////////////////////////////
   // Setting up files and arguments
   /////////////////////////////////
@@ -135,7 +135,7 @@ int main(int argc, char *argv[]) {
 
     input_file >> x >> y >> z; // Attenuation parameters
 
-    texture *tex = new solid(5.0f * light_color);
+    texture *tex = new solid(light_color);
     light *lig = new light(tex);
     rt_world.add_bulb(light_pos, 0.1f, lig);
   }
@@ -240,16 +240,16 @@ int main(int argc, char *argv[]) {
       int num_of_faces;
       input_file >> num_of_faces;
 
-      //vec3 *normals = new vec3[num_of_faces];
-      //double *intercepts = new double[num_of_faces];
+      // vec3 *normals = new vec3[num_of_faces];
+      // double *intercepts = new double[num_of_faces];
       for (int j = 0; j < num_of_faces; j++) {
         double intercept;
         input_file >> x >> y >> z >> intercept;
-        //normals[j] = vec3(x, y, z);
-        //intercepts[j] = intercept;
+        // normals[j] = vec3(x, y, z);
+        // intercepts[j] = intercept;
       }
 
-      //rt_world.add_polyhedron(num_of_faces, normals, intercepts, mat);
+      // rt_world.add_polyhedron(num_of_faces, normals, intercepts, mat);
     }
   }
 
@@ -273,3 +273,120 @@ int main(int argc, char *argv[]) {
 
   return 0;
 }
+
+int scene1(int argc, char *argv[]) {
+  char *input_file_name = argv[1];
+  char *output_file_name = argv[2];
+  std::ifstream input_file(input_file_name);
+  std::ofstream output_file(output_file_name);
+
+  camera cam;
+
+  cam.img_width = 400;
+  cam.img_height = 300;
+  cam.samples_per_pixel = 10;
+  cam.max_recursion_depth = 3;
+
+  cam.fov = 20;
+  cam.eye = point3(13, 2, 3);
+  cam.lookat = point3(0, 0, 0);
+  cam.up = vec3(0, 1, 0);
+
+  cam.defocus_angle = 0.6;
+  cam.focus_distance = 10.0;
+
+  world w;
+
+  texture *tex = new solid(color(0.5, 0.5, 0.5));
+  material *mat = new material(tex);
+  w.add_sphere(point3(0, -1000, 0), 1000, mat);
+
+  tex = new solid(color(0.0, 0.0, 0.0));
+  mat = new material(tex, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.5f);
+  w.add_sphere(point3(0, 1, 0), 1.0, mat);
+
+  tex = new solid(color(0.4, 0.2, 0.1));
+  mat = new material(tex);
+  w.add_sphere(point3(-4, 1, 0), 1.0, mat);
+
+  tex = new solid(color(0.7, 0.6, 0.5));
+  mat = new material(tex, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f);
+  w.add_sphere(point3(4, 1, 0), 1.0, mat);
+
+  for (int a = -11; a < 11; a++) {
+    for (int b = -11; b < 11; b++) {
+      auto choose_mat = random_double();
+      point3 center(a + 0.9 * random_double(), 0.2, b + 0.9 * random_double());
+
+      if ((center - point3(4, 0.2, 0)).length() > 0.9) {
+        material *sphere_material;
+
+        if (choose_mat < 0.8) {
+          // diffuse
+          auto albedo = color::random() * color::random();
+          tex = new solid(albedo);
+          sphere_material = new material(tex);
+          w.add_sphere(center, 0.2, sphere_material);
+
+        } else if (choose_mat < 0.95) {
+          // metal
+          auto albedo = color::random(0.5, 1);
+          auto fuzz = random_double(0, 0.5);
+          tex = new solid(albedo);
+          mat =
+              new material(tex, fuzz, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f);
+          w.add_sphere(center, 0.2, mat);
+
+        } else {
+          // glass
+          tex = new solid(color(0.0, 0.0, 0.0));
+          mat =
+              new material(tex, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.5f);
+          w.add_sphere(center, 0.2, mat);
+        }
+      }
+    }
+  }
+
+  cam.render(w, output_file);
+
+  return 0;
+}
+
+int scene2(int argc, char *argv[]) {
+  char *input_file_name = argv[1];
+  char *output_file_name = argv[2];
+  std::ifstream input_file(input_file_name);
+  std::ofstream output_file(output_file_name);
+
+  camera cam;
+
+  cam.img_width = 400;
+  cam.img_height = 300;
+  cam.samples_per_pixel = 10;
+  cam.max_recursion_depth = 3;
+
+  cam.fov = 20;
+  cam.eye = point3(13, 2, 3);
+  cam.lookat = point3(0, 0, 0);
+  cam.up = vec3(0, 1, 0);
+
+  cam.defocus_angle = 0.0;
+  cam.focus_distance = 10.0;
+
+  world w;
+
+  texture *tex = new checker(0.32, color(0.2, 0.3, 0.1), color(0.9, 0.9, 0.9));
+  material *mat = new material(tex);
+  w.add_sphere(point3(0, -10, 0), 10, mat);
+
+  tex = new checker(0.32, color(0.2, 0.3, 0.1), color(0.9, 0.9, 0.9));
+  mat = new material(tex);
+  w.add_sphere(point3(0, 10, 0), 10, mat);
+
+  cam.render(w, output_file);
+
+  return 0;
+}
+
+int main(int argc, char *argv[]) { return scene2(argc, argv); }

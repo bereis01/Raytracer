@@ -128,7 +128,7 @@ color camera::ray_color(const ray &r, int depth, const world &w) const {
     color diffuse_color;
     ray_was_scattered_by_object = record.mat->scatter_diffuse(
         r, record, attenuation, scattered, diffuse_c);
-    if (ray_was_scattered_by_object)
+    if (ray_was_scattered_by_object && (diffuse_c > 0.0f))
       diffuse_color = attenuation * ray_color(scattered, depth - 1, w);
 
     // Reflective ray
