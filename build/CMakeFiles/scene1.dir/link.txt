@@ -1,0 +1,1 @@
+/usr/bin/c++ CMakeFiles/scene1.dir/src/camera.cpp.o CMakeFiles/scene1.dir/src/color.cpp.o CMakeFiles/scene1.dir/src/interval.cpp.o CMakeFiles/scene1.dir/src/main.cpp.o CMakeFiles/scene1.dir/src/material.cpp.o CMakeFiles/scene1.dir/src/object.cpp.o CMakeFiles/scene1.dir/src/texture.cpp.o CMakeFiles/scene1.dir/src/world.cpp.o -o scene1 

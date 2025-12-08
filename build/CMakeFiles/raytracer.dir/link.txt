@@ -1,0 +1,1 @@
+/usr/bin/c++ CMakeFiles/raytracer.dir/src/camera.cpp.o CMakeFiles/raytracer.dir/src/color.cpp.o CMakeFiles/raytracer.dir/src/interval.cpp.o CMakeFiles/raytracer.dir/src/main.cpp.o CMakeFiles/raytracer.dir/src/material.cpp.o CMakeFiles/raytracer.dir/src/object.cpp.o CMakeFiles/raytracer.dir/src/texture.cpp.o CMakeFiles/raytracer.dir/src/world.cpp.o -o raytracer 

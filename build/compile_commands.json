@@ -1,0 +1,50 @@
+[
+{
+  "directory": "/home/bereis01/Personal/UFMG/Projects/CG/Raytracer/build",
+  "command": "/usr/bin/c++  -I/home/bereis01/Personal/UFMG/Projects/CG/Raytracer/include -std=gnu++20 -o CMakeFiles/raytracer.dir/src/camera.cpp.o -c /home/bereis01/Personal/UFMG/Projects/CG/Raytracer/src/camera.cpp",
+  "file": "/home/bereis01/Personal/UFMG/Projects/CG/Raytracer/src/camera.cpp",
+  "output": "CMakeFiles/raytracer.dir/src/camera.cpp.o"
+},
+{
+  "directory": "/home/bereis01/Personal/UFMG/Projects/CG/Raytracer/build",
+  "command": "/usr/bin/c++  -I/home/bereis01/Personal/UFMG/Projects/CG/Raytracer/include -std=gnu++20 -o CMakeFiles/raytracer.dir/src/color.cpp.o -c /home/bereis01/Personal/UFMG/Projects/CG/Raytracer/src/color.cpp",
+  "file": "/home/bereis01/Personal/UFMG/Projects/CG/Raytracer/src/color.cpp",
+  "output": "CMakeFiles/raytracer.dir/src/color.cpp.o"
+},
+{
+  "directory": "/home/bereis01/Personal/UFMG/Projects/CG/Raytracer/build",
+  "command": "/usr/bin/c++  -I/home/bereis01/Personal/UFMG/Projects/CG/Raytracer/include -std=gnu++20 -o CMakeFiles/raytracer.dir/src/interval.cpp.o -c /home/bereis01/Personal/UFMG/Projects/CG/Raytracer/src/interval.cpp",
+  "file": "/home/bereis01/Personal/UFMG/Projects/CG/Raytracer/src/interval.cpp",
+  "output": "CMakeFiles/raytracer.dir/src/interval.cpp.o"
+},
+{
+  "directory": "/home/bereis01/Personal/UFMG/Projects/CG/Raytracer/build",
+  "command": "/usr/bin/c++  -I/home/bereis01/Personal/UFMG/Projects/CG/Raytracer/include -std=gnu++20 -o CMakeFiles/raytracer.dir/src/main.cpp.o -c /home/bereis01/Personal/UFMG/Projects/CG/Raytracer/src/main.cpp",
+  "file": "/home/bereis01/Personal/UFMG/Projects/CG/Raytracer/src/main.cpp",
+  "output": "CMakeFiles/raytracer.dir/src/main.cpp.o"
+},
+{
+  "directory": "/home/bereis01/Personal/UFMG/Projects/CG/Raytracer/build",
+  "command": "/usr/bin/c++  -I/home/bereis01/Personal/UFMG/Projects/CG/Raytracer/include -std=gnu++20 -o CMakeFiles/raytracer.dir/src/material.cpp.o -c /home/bereis01/Personal/UFMG/Projects/CG/Raytracer/src/material.cpp",
+  "file": "/home/bereis01/Personal/UFMG/Projects/CG/Raytracer/src/material.cpp",
+  "output": "CMakeFiles/raytracer.dir/src/material.cpp.o"
+},
+{
+  "directory": "/home/bereis01/Personal/UFMG/Projects/CG/Raytracer/build",
+  "command": "/usr/bin/c++  -I/home/bereis01/Personal/UFMG/Projects/CG/Raytracer/include -std=gnu++20 -o CMakeFiles/raytracer.dir/src/object.cpp.o -c /home/bereis01/Personal/UFMG/Projects/CG/Raytracer/src/object.cpp",
+  "file": "/home/bereis01/Personal/UFMG/Projects/CG/Raytracer/src/object.cpp",
+  "output": "CMakeFiles/raytracer.dir/src/object.cpp.o"
+},
+{
+  "directory": "/home/bereis01/Personal/UFMG/Projects/CG/Raytracer/build",
+  "command": "/usr/bin/c++  -I/home/bereis01/Personal/UFMG/Projects/CG/Raytracer/include -std=gnu++20 -o CMakeFiles/raytracer.dir/src/texture.cpp.o -c /home/bereis01/Personal/UFMG/Projects/CG/Raytracer/src/texture.cpp",
+  "file": "/home/bereis01/Personal/UFMG/Projects/CG/Raytracer/src/texture.cpp",
+  "output": "CMakeFiles/raytracer.dir/src/texture.cpp.o"
+},
+{
+  "directory": "/home/bereis01/Personal/UFMG/Projects/CG/Raytracer/build",
+  "command": "/usr/bin/c++  -I/home/bereis01/Personal/UFMG/Projects/CG/Raytracer/include -std=gnu++20 -o CMakeFiles/raytracer.dir/src/world.cpp.o -c /home/bereis01/Personal/UFMG/Projects/CG/Raytracer/src/world.cpp",
+  "file": "/home/bereis01/Personal/UFMG/Projects/CG/Raytracer/src/world.cpp",
+  "output": "CMakeFiles/raytracer.dir/src/world.cpp.o"
+}
+]
