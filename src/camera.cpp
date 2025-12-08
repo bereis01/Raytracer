@@ -154,5 +154,7 @@ color camera::ray_color(const ray &r, int depth, const world &w) const {
   }
 
   // If the ray hits nothing, returns background color
-  return this->background_color;
+  vec3 unit_direction = unit_vector(r.get_direction());
+  auto a = 0.5 * (unit_direction.y() + 1.0);
+  return (1.0 - a) * color(1.0, 1.0, 1.0) + a * color(0.5, 0.7, 1.0);
 }

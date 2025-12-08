@@ -60,15 +60,15 @@ int main(int argc, char *argv[]) {
   int samples_per_pixel = 10;
   int max_recursion_depth = 3;
   if (argc >= 7) {
-    samples_per_pixel = std::stoi(argv[3]);
-    max_recursion_depth = std::stoi(argv[4]);
+    samples_per_pixel = std::stoi(argv[5]);
+    max_recursion_depth = std::stoi(argv[6]);
   }
 
   double defocus_angle = 0.0f;
   double focus_distance = 10.0f;
   if (argc >= 9) {
-    defocus_angle = std::stod(argv[3]);
-    focus_distance = std::stod(argv[4]);
+    defocus_angle = std::stod(argv[7]);
+    focus_distance = std::stod(argv[8]);
   }
 
   // Shared variables
@@ -84,11 +84,6 @@ int main(int argc, char *argv[]) {
   world rt_world;
   std::vector<pigment_description> pigment_descriptions;
   std::vector<material_description> material_descriptions;
-
-  // Temporary ground
-  checker *tex = new checker(10.0f, color(0, 0, 0), color(1, 1, 1));
-  material *mat = new material(tex);
-  rt_world.add_sphere(point3(0.0f, -1100.0f, -100.0f), 1000.0f, mat);
 
   ///////////////
   // Camera setup

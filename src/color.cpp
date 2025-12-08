@@ -13,10 +13,10 @@ void write_color(std::ofstream &out, const color &pixel_color) {
   double g = pixel_color.y();
   double b = pixel_color.z();
 
-  // Applies a gamma 2 transformation
+  /* // Applies a gamma 2 transformation
   r = linear_to_gamma(r);
   g = linear_to_gamma(g);
-  b = linear_to_gamma(b);
+  b = linear_to_gamma(b); */
 
   // Translates the [0,1] component values to the interval [0,255]
   static const interval intensity(0.000f, 0.999f);
