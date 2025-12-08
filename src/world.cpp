@@ -20,9 +20,9 @@ void world::add_bulb(point3 center, double radius, light *lig) {
   objects.emplace_back(ball);
 }
 
-void world::add_polyhedron(std::vector<vec3> normals,
-                           std::vector<double> intercepts, material *mat) {
-  polyhedron *poly = new polyhedron(normals, intercepts, mat);
+void world::add_polyhedron(int num_of_faces, vec3 *normals, double *intercepts,
+                           material *mat) {
+  polyhedron *poly = new polyhedron(num_of_faces, normals, intercepts, mat);
   objects.emplace_back(poly);
 }
 

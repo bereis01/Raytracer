@@ -237,17 +237,19 @@ int main(int argc, char *argv[]) {
     }
 
     else if (object_type == "polyhedron") {
-      /* int num_of_faces;
-      std::vector<vec3> normals;
-      std::vector<double> intercepts;
+      int num_of_faces;
+      input_file >> num_of_faces;
+
+      //vec3 *normals = new vec3[num_of_faces];
+      //double *intercepts = new double[num_of_faces];
       for (int j = 0; j < num_of_faces; j++) {
         double intercept;
         input_file >> x >> y >> z >> intercept;
-        normals.emplace_back(vec3(x, y, z));
-        intercepts.emplace_back(intercept);
+        //normals[j] = vec3(x, y, z);
+        //intercepts[j] = intercept;
       }
 
-      rt_world.add_polyhedron(normals, intercepts, mat); */
+      //rt_world.add_polyhedron(num_of_faces, normals, intercepts, mat);
     }
   }
 
